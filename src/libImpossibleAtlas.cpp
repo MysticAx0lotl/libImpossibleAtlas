@@ -352,7 +352,14 @@ Image& ImageAtlas::getImageByName(std::string name)
         }
     }
 
-    return this->ImagesArr[0];
+    if(imagesArrLen > 0)
+    {
+        return this->ImagesArr[0];
+    }
+    else
+    {
+        return ;
+    }
 }
 
 Fragment& ImageAtlas::getFragmentBy2DIndex(int indexX, int indexY)
@@ -388,15 +395,15 @@ void ImageAtlas::removeImageByName(std::string name)
 {
     for(int i = 0; i < imagesArrLen; i++)
     {
-        if(ImagesArr[i].name_imageType_0 == name)
+        if(this->ImagesArr[i].name_imageType_0 == name)
         {
-            Image temp = ImagesArr[i];
+            Image temp = this->ImagesArr[i];
             for(int j = i; j < imagesArrLen - 1; j++)
             {
-                ImagesArr[j] = ImagesArr[j+1];
+                this->ImagesArr[j] = this->ImagesArr[j+1];
             }
-            ImagesArr[imagesArrLen] = temp;
-            ImagesArr.pop_back();
+            this->ImagesArr[imagesArrLen] = temp;
+            this->ImagesArr.pop_back();
         }
     }
 }
@@ -421,11 +428,6 @@ void ImageAtlas::printAllFragments()
 }
 
 void ImageAtlas::printAllImages()
-{
-
-}
-
-void ImageAtlas::saveToXml(std::string filename)
 {
 
 }
