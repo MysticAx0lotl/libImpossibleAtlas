@@ -44,13 +44,6 @@ class ImageAtlas
         
         
         void addImage(Image*);
-        /*
-        void addFragment(*Fragment)
-
-        Image *getImagePtrByIndex(int);
-        Image *getImagePtrByName(std::string);
-        Fragment *getFragmentPtrBy2DIndex(int, int);
-        Fragment *getFragmentPtrByName(std::string);
 
         void removeImageByName(std::string);
         void removeFragmentByName(std::string);
@@ -59,13 +52,16 @@ class ImageAtlas
 
         void printAllFragments();
         void printAllImages();
-        void saveToXml(std::string);
-        */
+        
         void saveToBin(std::string);
+        void saveToXml(std::string);
+
     private:
         std::vector<Image> ImagesArr;
         int imagesArrLen;
         int numFragments;
+        int trueHeight;
+        int trueWidth;
         
 };
 

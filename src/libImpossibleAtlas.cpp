@@ -332,6 +332,11 @@ void ImageAtlas::saveToBin(std::string filepath)
     }
 }
 
+void ImageAtlas::saveToXml(std::string)
+{
+    std::cout << "XML output is unsupported, sorry :(" << std::endl;
+}
+
 Image& ImageAtlas::getImageByIndex(int index)
 {
     return this->ImagesArr[index];
@@ -377,4 +382,50 @@ void ImageAtlas::addImage(Image *input)
     this->numFragments += input->fragmentArrLen;
     imagesArrLen++;
     this->ImagesArr.push_back(*input);
+}
+
+void ImageAtlas::removeImageByName(std::string name)
+{
+    for(int i = 0; i < imagesArrLen; i++)
+    {
+        if(ImagesArr[i].name_imageType_0 == name)
+        {
+            Image temp = ImagesArr[i];
+            for(int j = i; j < imagesArrLen - 1; j++)
+            {
+                ImagesArr[j] = ImagesArr[j+1];
+            }
+            ImagesArr[imagesArrLen] = temp;
+            ImagesArr.pop_back();
+        }
+    }
+}
+void ImageAtlas::removeFragmentByName(std::string name)
+{
+    
+}
+
+void ImageAtlas::removeImageByIndex(int index)
+{
+
+}
+
+void ImageAtlas::removeFragmentByIndex(int index)
+{
+
+}
+
+void ImageAtlas::printAllFragments()
+{
+
+}
+
+void ImageAtlas::printAllImages()
+{
+
+}
+
+void ImageAtlas::saveToXml(std::string filename)
+{
+
 }
