@@ -2,11 +2,11 @@
 
 //Source: https://codereview.stackexchange.com/a/22907
 //modified to convert to and then return an unsigned char vector instead of a signed one
-static std::vector<unsigned char> ReadAllBytes(char const* filename)
+static std::vector<unsigned char> ReadAllBytes(const std::string& filename)
 {
-    std::ifstream ifs(filename, std::ios::binary|std::ios::ate);
+    std::ifstream ifs(filename.c_str(), std::ios::binary|std::ios::ate);
     std::ifstream::pos_type pos = ifs.tellg();
-
+    
     if (pos == 0) {
         return std::vector<unsigned char>{};
     }
@@ -124,10 +124,10 @@ void writeJavaShort(std::ofstream& datafile, short sourceShort)
     datafile.write(reinterpret_cast<const char*>(&swapSource), sizeof(swapSource));
 }
 
-void writeJavaUTF8(std::ofstream& datafile, std::string sourceStr)
+void writeJavaUTF8(std::ofstream& datafile, std::string_view sourceStr)
 {
     writeJavaShort(datafile, sourceStr.size());
-    datafile.write(sourceStr.c_str(), sourceStr.size());
+    datafile.write(sourceStr.data(), sourceStr.size());
 }
 
 //Endianess doesn't matter for bools or char arrays, this function handles exporting those
@@ -148,10 +148,10 @@ ImageAtlas::ImageAtlas(bool debugMode)
 }
 
 //Constructor that calls loadXML or loadBin depending on the detected file format
-ImageAtlas::ImageAtlas(std::string filename, bool debugMode)
+ImageAtlas::ImageAtlas(const std::string& filename, bool debugMode)
 {
-    if(debugMode){std::cout << "Attempting to read file " << filename.c_str() << std::endl;}
-    std::vector<unsigned char> atlasChars = ReadAllBytes(filename.c_str()); //load file from path
+    if(debugMode){std::cout << "Attempting to read file " << filename << std::endl;}
+    std::vector<unsigned char> atlasChars = ReadAllBytes(filename); //load file from path
     std::string beginning;
     for(int i = 0; i < 4; i++)
     {
@@ -284,10 +284,9 @@ void ImageAtlas::loadBin(std::vector<unsigned char> atlasChars, bool debugMode)
             tempImg->FragmentArr.push_back(*cust);
             tempImg->fragmentArrLen++;
             this->numFragments++;
-            
-            this->ImagesArr.push_back(*tempImg);
             */
             
+            this->ImagesArr.push_back(*tempImg);           
         }
 
         std::cout << "Loaded " << this->ImagesArr.size() << " images!" << std::endl;
@@ -300,12 +299,12 @@ void ImageAtlas::loadBin(std::vector<unsigned char> atlasChars, bool debugMode)
     if(debugMode){std::cout << "Loaded entire atlas!" << std::endl;}
 }
 
-void ImageAtlas::loadXML(std::string filepath, bool debugMode)
+void ImageAtlas::loadXML(const std::string& fillepath, bool debugMode)
 {
     std::cout << "XML files are currently unsupported, sorry :(" << std::endl;
 }
 
-void ImageAtlas::saveToBin(std::string filepath)
+void ImageAtlas::saveToBin(const std::string& filepath)
 {
     std::ofstream dataOut;
     dataOut.open(filepath.c_str(), std::ios_base::binary | std::ios_base::out);
@@ -332,42 +331,48 @@ void ImageAtlas::saveToBin(std::string filepath)
     }
 }
 
-void ImageAtlas::saveToXml(std::string)
+void ImageAtlas::saveToXml(const std::string& outdir)
 {
     std::cout << "XML output is unsupported, sorry :(" << std::endl;
 }
 
-Image& ImageAtlas::getImageByIndex(int index)
+Image* ImageAtlas::getImageByIndex(int index)
 {
-    return this->ImagesArr[index];
+    if(index >= this->imagesArrLen)
+    {
+        return &this->ImagesArr[index];
+    }
+    
+    return nullptr;
 }
 
-Image& ImageAtlas::getImageByName(std::string name)
+Image* ImageAtlas::getImageByName(std::string_view name)
 {
     for(int i = 0; i < this->imagesArrLen; i++)
     {
         if(this->ImagesArr[i].name_imageType_0 == name)
         {
-            return this->ImagesArr[i];
+            return &this->ImagesArr[i];
         }
     }
 
-    if(imagesArrLen > 0)
-    {
-        return this->ImagesArr[0];
-    }
-    else
-    {
-        return ;
-    }
+    return nullptr;
 }
 
-Fragment& ImageAtlas::getFragmentBy2DIndex(int indexX, int indexY)
+Fragment* ImageAtlas::getFragmentBy2DIndex(int indexX, int indexY)
 {
-    return this->ImagesArr[indexX].FragmentArr[indexY];
+    if(indexX >= imagesArrLen)
+    {
+        if(indexY >= this->ImagesArr[indexX].fragmentArrLen)
+        {
+            return &this->ImagesArr[indexX].FragmentArr[indexY];
+        }
+    }
+
+    return nullptr;
 }
 
-Fragment& ImageAtlas::getFragmentByName(std::string name)
+Fragment* ImageAtlas::getFragmentByName(std::string_view name)
 {
     for(int i = 0; i < this->imagesArrLen; i++)
     {
@@ -375,12 +380,12 @@ Fragment& ImageAtlas::getFragmentByName(std::string name)
         {
             if(this->ImagesArr[i].FragmentArr[j].name_utf_0 == name)
             {
-                return this->ImagesArr[i].FragmentArr[j];
+                return &this->ImagesArr[i].FragmentArr[j];
             }
         }
     }
 
-    return this->ImagesArr[0].FragmentArr[0];
+    return nullptr;
 }
 
 void ImageAtlas::addImage(Image *input)
@@ -391,7 +396,7 @@ void ImageAtlas::addImage(Image *input)
     this->ImagesArr.push_back(*input);
 }
 
-void ImageAtlas::removeImageByName(std::string name)
+void ImageAtlas::removeImageByName(std::string_view name)
 {
     for(int i = 0; i < imagesArrLen; i++)
     {
@@ -407,7 +412,7 @@ void ImageAtlas::removeImageByName(std::string name)
         }
     }
 }
-void ImageAtlas::removeFragmentByName(std::string name)
+void ImageAtlas::removeFragmentByName(std::string_view name)
 {
     
 }

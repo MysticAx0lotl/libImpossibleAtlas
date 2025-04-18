@@ -7,6 +7,7 @@
 #include <vector>
 #include <filesystem>
 #include <bit>
+#include <expected>
 
 struct Fragment
 {
@@ -31,30 +32,30 @@ class ImageAtlas
 {
     public:
         ImageAtlas(bool);
-        ImageAtlas(std::string, bool);
+        ImageAtlas(std::string const&, bool);
         ~ImageAtlas();
 
         void loadBin(std::vector<unsigned char>, bool);
-        void loadXML(std::string, bool);
+        void loadXML(std::string const&, bool);
 
-        Image& getImageByIndex(int);
-        Image& getImageByName(std::string);
-        Fragment& getFragmentBy2DIndex(int, int);
-        Fragment& getFragmentByName(std::string);
+        Image* getImageByIndex(int);
+        Image* getImageByName(std::string_view);
+        Fragment* getFragmentBy2DIndex(int, int);
+        Fragment* getFragmentByName(std::string_view);
         
         
         void addImage(Image*);
 
-        void removeImageByName(std::string);
-        void removeFragmentByName(std::string);
+        void removeImageByName(std::string_view);
+        void removeFragmentByName(std::string_view);
         void removeImageByIndex(int);
         void removeFragmentByIndex(int);
 
         void printAllFragments();
         void printAllImages();
         
-        void saveToBin(std::string);
-        void saveToXml(std::string);
+        void saveToBin(std::string const&);
+        void saveToXml(std::string const&);
 
     private:
         std::vector<Image> ImagesArr;
