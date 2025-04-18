@@ -271,16 +271,13 @@ void ImageAtlas::loadBin(std::vector<unsigned char> atlasChars, bool debugMode)
 
 void ImageAtlas::loadXML(const std::string& fillepath, bool debugMode)
 {
-    std::cout << "XML files are currently unsupported, sorry :(" << std::endl;
+    std::cout << "Reading XML files is currently unsupported, sorry :(" << std::endl;
 }
 
 void ImageAtlas::saveToBin(const std::string& filepath)
 {
     std::ofstream dataOut;
     dataOut.open(filepath.c_str(), std::ios_base::binary | std::ios_base::out);
-
-    Image tempImg;
-    Fragment tempFrag;
 
     writeJavaShort(dataOut, imagesArrLen);
 
@@ -301,9 +298,35 @@ void ImageAtlas::saveToBin(const std::string& filepath)
     }
 }
 
-void ImageAtlas::saveToXml(const std::string& outdir)
+void ImageAtlas::saveToXml(const std::string& filepath)
 {
-    std::cout << "XML output is unsupported, sorry :(" << std::endl;
+    std::ofstream outXML(filepath);
+
+    outXML << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl << "<ImageAtlas>" << std::endl;
+    outXML << "    <ImagesArr>" << std::endl;
+
+    for(int i = 0; i < this->imagesArrLen; i++)
+    {
+        outXML << "        <Image name_imageType_0=\"" << this->ImagesArr[i].name_imageType_0 << "\" alpha=\"" << this->ImagesArr[i].alpha << "\">" << std::endl;
+        outXML << "            <FragmentArr>" << std::endl;
+
+        for(int j = 0; j < this->ImagesArr[i].fragmentArrLen; j++)
+        {
+            outXML << "                <Fragment name_utf_0=\"" << this->ImagesArr[i].FragmentArr[j].name_utf_0 << "\" ";
+            outXML << "x_short_1=\"" << this->ImagesArr[i].FragmentArr[j].x_short_1 << "\" ";
+            outXML << "y_short_2=\"" << this->ImagesArr[i].FragmentArr[j].y_short_2 << "\" ";
+            outXML << "w_short_3=\"" << this->ImagesArr[i].FragmentArr[j].w_short_3 << "\" ";
+            outXML << "h_short_4=\"" << this->ImagesArr[i].FragmentArr[j].h_short_4 << "\" />" << std::endl;
+        }
+
+        outXML << "            </FragmentArr>" << std::endl;
+        outXML << "        </Image>" << std::endl;
+    }
+
+    outXML << "    </ImagesArr>" << std::endl;
+    outXML << "</ImageAtlas>" << std::endl;
+
+
 }
 
 Image* ImageAtlas::getImageByIndex(int index)

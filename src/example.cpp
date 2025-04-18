@@ -21,6 +21,8 @@ int main()
 
     test.addImage(cstbg);
     */
+
+    test.saveToXml("p.xml");
     
     return 0;
 }
