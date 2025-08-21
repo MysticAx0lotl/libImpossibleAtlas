@@ -42,7 +42,8 @@ class ImageAtlas
         Image* getImageByName(std::string_view);
         Fragment* getFragmentBy2DIndex(int, int);
         Fragment* getFragmentByName(std::string_view);
-        
+        int getFragmentCount();
+        int getImagesCount();
         
         void addImage(Image*);
 

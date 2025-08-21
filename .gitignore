@@ -404,3 +404,5 @@ src/a.exe
 /.vscode
 src/a.out
 *.out
+*.xml
+*.bin

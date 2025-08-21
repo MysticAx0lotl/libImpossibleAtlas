@@ -331,7 +331,7 @@ void ImageAtlas::saveToXml(const std::string& filepath)
 
 Image* ImageAtlas::getImageByIndex(int index)
 {
-    if(index >= this->imagesArrLen)
+    if(index < this->imagesArrLen)
     {
         return &this->ImagesArr[index];
     }
@@ -354,9 +354,9 @@ Image* ImageAtlas::getImageByName(std::string_view name)
 
 Fragment* ImageAtlas::getFragmentBy2DIndex(int indexX, int indexY)
 {
-    if(indexX >= imagesArrLen)
+    if(indexX < imagesArrLen)
     {
-        if(indexY >= this->ImagesArr[indexX].fragmentArrLen)
+        if(indexY < this->ImagesArr[indexX].fragmentArrLen)
         {
             return &this->ImagesArr[indexX].FragmentArr[indexY];
         }
@@ -379,6 +379,16 @@ Fragment* ImageAtlas::getFragmentByName(std::string_view name)
     }
 
     return nullptr;
+}
+
+int ImageAtlas::getFragmentCount()
+{
+    return this->numFragments;
+}
+
+int ImageAtlas::getImagesCount()
+{
+    return this->imagesArrLen;
 }
 
 void ImageAtlas::addImage(Image *input)

@@ -1,9 +1,9 @@
 #include "libImpossibleAtlas.hpp"
 
 //This is an example that generates a blank level
-int main()
+int main(int argc, char *argv[])
 {
-    ImageAtlas test("p.bin", true);
+    ImageAtlas test(argv[1], true);
 
     /*
     Image *cstbg = new Image;
@@ -22,7 +22,11 @@ int main()
     test.addImage(cstbg);
     */
 
-    test.saveToXml("p.xml");
+    std::string outdir = argv[1];
+
+    std::string outfix = outdir.substr(0, outdir.length()-3);
+
+    test.saveToXml(outfix + "xml");
     
     return 0;
 }
