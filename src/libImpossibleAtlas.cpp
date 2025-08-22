@@ -180,8 +180,8 @@ void ImageAtlas::loadBin(std::vector<unsigned char> atlasChars, bool debugMode)
         this->imagesArrLen = readShortFromJava(atlasChars, 0);
         if(debugMode){std::cout << "There are " << this->imagesArrLen << " images in the file!"<< std::endl;}
         currentByte += 2;
-        Image *tempImg = new Image;
-        Fragment *tempFrag = new Fragment;
+        Image tempImg;
+        Fragment tempFrag;
         for(int i = 0; i < this->imagesArrLen; i++)
         {
             if(debugMode){std::cout << "Getting length of image name..." << std::endl;}
@@ -189,15 +189,15 @@ void ImageAtlas::loadBin(std::vector<unsigned char> atlasChars, bool debugMode)
     
             if(debugMode){std::cout << "Name is " << tempShort << " characters long" << std::endl;}
 
-            tempImg->name_imageType_0 = readUTF8FromJava(atlasChars, currentByte);
+            tempImg.name_imageType_0 = readUTF8FromJava(atlasChars, currentByte);
 
             currentByte += tempShort + 2;
 
-            if(debugMode){std::cout << "Begin load image " << tempImg->name_imageType_0 << std::endl;}
+            if(debugMode){std::cout << "Begin load image " << tempImg.name_imageType_0 << std::endl;}
 
-            tempImg->fragmentArrLen = readShortFromJava(atlasChars, currentByte);
+            tempImg.fragmentArrLen = readShortFromJava(atlasChars, currentByte);
 
-            if(debugMode){std::cout << "There are " << tempImg->fragmentArrLen << " fragments in the image!"<< std::endl;}
+            if(debugMode){std::cout << "There are " << tempImg.fragmentArrLen << " fragments in the image!"<< std::endl;}
 
             currentByte += 2;
 
@@ -205,65 +205,62 @@ void ImageAtlas::loadBin(std::vector<unsigned char> atlasChars, bool debugMode)
     
             if(debugMode){std::cout << "Alpha is " << tempShort << " characters long" << std::endl;}
 
-            tempImg->alpha = readUTF8FromJava(atlasChars, currentByte);
+            tempImg.alpha = readUTF8FromJava(atlasChars, currentByte);
 
             tempShort = readShortFromJava(atlasChars, currentByte);
     
-            if(debugMode){std::cout << "Alpha is " << tempImg->alpha << std::endl;}
+            if(debugMode){std::cout << "Alpha is " << tempImg.alpha << std::endl;}
 
             currentByte += tempShort + 2;
             
             
-            for(int j = 0; j < tempImg->fragmentArrLen; j++)
+            for(int j = 0; j < tempImg.fragmentArrLen; j++)
             {
                 tempShort = readShortFromJava(atlasChars, currentByte);
                 if(debugMode){std::cout << "Name of fragment " << j << " is " << tempShort << " characters long" << std::endl;}
                 
-                tempFrag->name_utf_0 = readUTF8FromJava(atlasChars, currentByte);
-                if(debugMode){std::cout << "Name of fragment " << j << " is " << tempFrag->name_utf_0 << std::endl;}
+                tempFrag.name_utf_0 = readUTF8FromJava(atlasChars, currentByte);
+                if(debugMode){std::cout << "Name of fragment " << j << " is " << tempFrag.name_utf_0 << std::endl;}
 
                 currentByte += tempShort + 2;
 
-                tempFrag->x_short_1 = readFloatFromJava(atlasChars, currentByte);
+                tempFrag.x_short_1 = readFloatFromJava(atlasChars, currentByte);
 
-                if(debugMode){std::cout << "xpos of fragment " << j << " is " << tempFrag->x_short_1 << std::endl;}
-
-                currentByte += 4;
-
-                tempFrag->y_short_2 = readFloatFromJava(atlasChars, currentByte);
-
-                if(debugMode){std::cout << "ypos of fragment " << j << " is " << tempFrag->y_short_2 << std::endl;}
+                if(debugMode){std::cout << "xpos of fragment " << j << " is " << tempFrag.x_short_1 << std::endl;}
 
                 currentByte += 4;
 
-                tempFrag->w_short_3 = readFloatFromJava(atlasChars, currentByte);
+                tempFrag.y_short_2 = readFloatFromJava(atlasChars, currentByte);
 
-                if(debugMode){std::cout << "width of fragment " << j << " is " << tempFrag->w_short_3 << std::endl;}
-
-                currentByte += 4;
-
-                tempFrag->h_short_4 = readFloatFromJava(atlasChars, currentByte);
-
-                if(debugMode){std::cout << "height of fragment " << j << " is " << tempFrag->h_short_4 << std::endl;}
+                if(debugMode){std::cout << "ypos of fragment " << j << " is " << tempFrag.y_short_2 << std::endl;}
 
                 currentByte += 4;
 
-                tempFrag->indexInVec = j;
+                tempFrag.w_short_3 = readFloatFromJava(atlasChars, currentByte);
 
-                tempImg->FragmentArr.push_back(*tempFrag);
+                if(debugMode){std::cout << "width of fragment " << j << " is " << tempFrag.w_short_3 << std::endl;}
+
+                currentByte += 4;
+
+                tempFrag.h_short_4 = readFloatFromJava(atlasChars, currentByte);
+
+                if(debugMode){std::cout << "height of fragment " << j << " is " << tempFrag.h_short_4 << std::endl;}
+
+                currentByte += 4;
+
+                tempFrag.indexInVec = j;
+
+                tempImg.FragmentArr.push_back(tempFrag);
                 this->numFragments++;
             }
 
-            std::cout << "Loaded " << tempImg->FragmentArr.size() << " fragment(s)!" << std::endl;
+            std::cout << "Loaded " << tempImg.FragmentArr.size() << " fragment(s)!" << std::endl;
             
-            this->ImagesArr.push_back(*tempImg);           
+            this->ImagesArr.push_back(tempImg);           
         }
 
         std::cout << "Loaded " << this->ImagesArr.size() << " images!" << std::endl;
         this->imagesArrLen = ImagesArr.size();
-
-        delete tempFrag;
-        delete tempImg;
     }
 
     if(debugMode){std::cout << "Loaded entire atlas!" << std::endl;}
