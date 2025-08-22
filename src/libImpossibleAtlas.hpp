@@ -50,7 +50,7 @@ class ImageAtlas
         void removeImageByName(std::string_view);
         void removeFragmentByName(std::string_view);
         void removeImageByIndex(int);
-        void removeFragmentByIndex(int);
+        void removeFragmentBy2DIndex(int, int);
 
         void printAllFragments();
         void printAllImages();

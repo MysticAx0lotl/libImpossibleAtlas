@@ -417,17 +417,38 @@ void ImageAtlas::removeImageByName(std::string_view name)
 }
 void ImageAtlas::removeFragmentByName(std::string_view name)
 {
-    
+    for(int i = 0; i < imagesArrLen; i++)
+    {
+        for(int j = 0; j < this->ImagesArr[i].fragmentArrLen; i++)
+        {
+            if(this->ImagesArr[i].FragmentArr[j].name_utf_0 == name)
+            {
+                removeFragmentBy2DIndex(i, j);
+            }
+        }
+    }
 }
 
 void ImageAtlas::removeImageByIndex(int index)
-{
-
+{   
+    Image temp = this->ImagesArr[index];
+    for(int j = index; j < imagesArrLen - 1; j++)
+    {
+        this->ImagesArr[j] = this->ImagesArr[j+1];
+    }
+    this->ImagesArr[imagesArrLen] = temp;
+    this->ImagesArr.pop_back();
 }
 
-void ImageAtlas::removeFragmentByIndex(int index)
+void ImageAtlas::removeFragmentBy2DIndex(int indexX, int indexY)
 {
-
+    Fragment temp = this->ImagesArr[indexX].FragmentArr[indexY];
+    for(int j = indexY; j < (this->ImagesArr[indexX].fragmentArrLen - 1); j++)
+    {
+        this->ImagesArr[indexX].FragmentArr[j] = this->ImagesArr[indexX].FragmentArr[j+1];
+    }
+    this->ImagesArr[indexX].FragmentArr[this->ImagesArr[indexX].fragmentArrLen] = temp;
+    this->ImagesArr[indexX].FragmentArr.pop_back();
 }
 
 void ImageAtlas::printAllFragments()
